@@ -41,7 +41,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 			// words = <word1>  <word2>  ....  <wordN>
 			
 			for (String word: words){
-				String out = word + "\t" + year;
+				String out = word;
 				context.write(new Text(out), new Text("one"));
 			}
 		}
