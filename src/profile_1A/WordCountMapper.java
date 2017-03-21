@@ -1,5 +1,6 @@
 package profile_1A;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -12,7 +13,6 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 		String[] lines = value.toString().split("\n");
 		for (String line: lines) {
 			line = line.toLowerCase();
-			line = line.replaceAll("[!@#$%^&*()_+~`\"\\{}:;',.?/|]", "");
 			
 			String[] line_split = line.split("<===>");
 			// line_split = <author>  <date>  <text>
@@ -23,7 +23,21 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 			// date_split = <month>  <day>  <year>
 			String year = date_split[date_split.length-1];
 			
-			String[] words = line_split[line_split.length-1].split(" ");
+			String cleaned_text = new String();
+			ArrayList<String> words = new ArrayList<String>();
+			for (int i = 0; i < line_split[line_split.length-1].length(); i++) {
+				if (line_split[line_split.length-1].charAt(i) >= 'a' && line_split[line_split.length-1].charAt(i) <= 'z') {
+					cleaned_text += line_split[line_split.length-1].charAt(i);
+				}
+				else if ((line_split[line_split.length-1].charAt(i) == ' ') || (line_split[line_split.length-1].charAt(i) == '\t')) {
+					if (cleaned_text.length() > 0) {
+						words.add(cleaned_text);
+						cleaned_text = new String();
+					}
+				}
+			}
+			
+			
 			// words = <word1>  <word2>  ....  <wordN>
 			
 			for (String word: words){
