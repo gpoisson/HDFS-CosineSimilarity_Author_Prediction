@@ -18,6 +18,8 @@ import profile_1A.WordTuple;
 
 public class MainClass {
 	
+	// https://unmeshasreeveni.blogspot.com/2014/04/chaining-jobs-in-hadoop-mapreduce.html
+	
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
 		if (args.length != 2) {
@@ -38,16 +40,7 @@ public class MainClass {
 		job.setOutputFormatClass(TextOutputFormat.class);
 		
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
-		ArrayList<WordTuple> globalWordCounts = new ArrayList<WordTuple>();
-		
-		String textFile = "part-r-00000";
-		BufferedReader reader;
-		
-		reader = new BufferedReader(new FileReader(textFile));
-		
-		
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));		
 		
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 	}
