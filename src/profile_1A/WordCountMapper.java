@@ -17,6 +17,8 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 			String[] line_split = line.split("<===>");
 			// line_split = <author>  <date>  <text>
 			
+			String author = line_split[0];
+			
 			String date = line_split[1];
 			// date = <month day year>
 			String[] date_split = date.split(" ");
@@ -41,7 +43,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 			// words = <word1>  <word2>  ....  <wordN>
 			
 			for (String word: words){
-				String out = word;
+				String out = word + "\t" + author;
 				context.write(new Text(out), new Text("one"));
 			}
 		}

@@ -1,5 +1,6 @@
 package profile_1A;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
