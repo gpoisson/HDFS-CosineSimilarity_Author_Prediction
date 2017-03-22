@@ -25,6 +25,8 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 				most_common = entry[0];
 			}
 		}
+		
+		context.write(new Text(most_common), new FloatWritable());
 
 		ArrayList<Float> tfs = new ArrayList<Float>();
 		ArrayList<Text> words = new ArrayList<Text>();
@@ -35,7 +37,7 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 			int count = Integer.parseInt(entry[1]);
 			float tf = (float) (0.5 + 0.5 * (((float) count) / max_occurrances));
 			tfs.add(tf);
-			words.add(new Text(key.toString() + " " + val.toString()));
+			words.add(new Text(key.toString() + " " + term));
 		}
 		
 		for (int i = 0; i < tfs.size(); i++) {
