@@ -25,11 +25,12 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 
 		ArrayList<Float> tfs = new ArrayList<Float>();
 		ArrayList<Text> words = new ArrayList<Text>();
+		
 		for (Text val: values) {
 			String[] entry = val.toString().split("\t");
 			String term = entry[0];
 			int count = Integer.parseInt(entry[1]);
-			float tf = (float) (0.5 + 0.5 * ((float) count / max_occurrances));
+			float tf = (float) (0.5 + 0.5 * (((float) count) / max_occurrances));
 			tfs.add(tf);
 			words.add(new Text(key.toString() + " " + val.toString()));
 		}

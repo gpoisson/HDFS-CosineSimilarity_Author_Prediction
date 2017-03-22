@@ -42,11 +42,9 @@ public class MainClass {
 		job1.setInputFormatClass(TextInputFormat.class);
 		job1.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job1, new Path(args[0]));
-		//FileOutputFormat.setOutputPath(job, new Path(args[1]));		
+		FileInputFormat.setInputPaths(job1, new Path(args[0]));	
 		FileOutputFormat.setOutputPath(job1, new Path("data/word_count/"));
 		
-		//System.exit(job.waitForCompletion(true) ? 0 : 1);
 		job1.waitForCompletion(true);
 		
 		/*
@@ -150,7 +148,7 @@ public class MainClass {
 		job6.setOutputFormatClass(TextOutputFormat.class);
 		
 		FileInputFormat.setInputPaths(job6, new Path("data/idf/", "data/tf/"));
-		FileOutputFormat.setOutputPath(job6, new Path("data/aavs/"));
+		FileOutputFormat.setOutputPath(job6, new Path(args[1]));
 		
 		job6.waitForCompletion(true);
 	}
