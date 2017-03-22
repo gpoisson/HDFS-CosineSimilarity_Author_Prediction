@@ -56,7 +56,7 @@ public class MainClass {
 		 */
 		
 		Job job2=Job.getInstance(conf);
-		job2.setJarByClass(GlobalCount.class);
+		job2.setJarByClass(MainClass.class);
 		
 		job2.setMapperClass(CalculateTFMapper.class);
 		job2.setReducerClass(CalculateTFReducer.class);
