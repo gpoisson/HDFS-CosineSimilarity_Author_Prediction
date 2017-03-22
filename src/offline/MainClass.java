@@ -108,7 +108,7 @@ public class MainClass {
 		
 		FileInputFormat.setInputPaths(job4, new Path("data/word_count/"));
 		FileOutputFormat.setOutputPath(job4, new Path("data/author_word_use_count/"));
-		
+				
 		job4.waitForCompletion(true);
 		
 		/*
@@ -117,6 +117,8 @@ public class MainClass {
 		
 		Job job5=Job.getInstance(conf);
 		job5.setJarByClass(MainClass.class);
+		
+		//job5.addCacheFile(new Path("data/author_word_use_count/").toUri());
 		
 		job5.setMapperClass(CalculateIDFMapper.class);
 		job5.setReducerClass(CalculateIDFReducer.class);

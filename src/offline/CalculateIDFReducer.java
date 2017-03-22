@@ -13,7 +13,7 @@ public class CalculateIDFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
 		
 		for (Text val: values) {
-			context.write(key, new FloatWritable(Float.parseFloat(val.toString())));
+			context.write(new Text("idf_ " + key.toString()), new FloatWritable(Float.parseFloat(val.toString())));
 		}
 	}
 }

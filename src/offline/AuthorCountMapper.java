@@ -15,22 +15,14 @@ public class AuthorCountMapper extends Mapper<LongWritable, Text, Text, Text> {
 		
 		String[] lines = value.toString().split("\n");
 		ArrayList<String> authors = new ArrayList<String>();
+		
 		for (String line: lines) {
-			String[] split_line = line.split("\t");
-			String author = split_line[1];
-			boolean found = false;
-			for (String known: authors) {
-				if (known.equals(author)) {
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
-				authors.add(author);
-			}
-		}		
+			String[] line_split = line.split("\t");
+			String author = line_split[1];
+			authors.add(author);
+		}
 		for (String author: authors) {
-			context.write(new Text("authors:"), new Text("one"));
+			context.write(new Text(author), new Text("one"));
 		}
 	}
 }

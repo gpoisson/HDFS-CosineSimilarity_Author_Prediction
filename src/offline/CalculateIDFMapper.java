@@ -13,7 +13,7 @@ public class CalculateIDFMapper extends Mapper<LongWritable, Text, Text, Text> {
 	public void map(LongWritable   key,   Text   value,   Context   context) throws IOException, InterruptedException{
 		
 		String[] lines = value.toString().split("\n");
-		int author_count = -1;
+		int author_count = 1;
 		ArrayList<String> terms = new ArrayList<String>();
 		ArrayList<Integer> counts = new ArrayList<Integer>();
 		
