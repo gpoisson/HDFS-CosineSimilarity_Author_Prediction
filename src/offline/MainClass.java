@@ -25,21 +25,51 @@ public class MainClass {
 			System.exit(-1);
 		}
 		
+		String output_path = "intermediate_output";
 		Configuration conf = new Configuration();
 		
-		Job job=Job.getInstance(conf);
-		job.setJarByClass(MainClass.class);
+		/*
+		 *	Individual word count 
+		 */
 		
-		job.setMapperClass(WordCountMapper.class);
-		job.setReducerClass(WordCountReducer.class);
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
-		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputFormatClass(TextOutputFormat.class);
+		Job job1=Job.getInstance(conf);
+		job1.setJarByClass(MainClass.class);
 		
-		FileInputFormat.setInputPaths(job, new Path(args[0]));
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));		
+		job1.setMapperClass(WordCountMapper.class);
+		job1.setReducerClass(WordCountReducer.class);
 		
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
+		job1.setOutputKeyClass(Text.class);
+		job1.setOutputValueClass(Text.class);
+		
+		job1.setInputFormatClass(TextInputFormat.class);
+		job1.setOutputFormatClass(TextOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job1, new Path(args[0]));
+		//FileOutputFormat.setOutputPath(job, new Path(args[1]));		
+		FileOutputFormat.setOutputPath(job1, new Path(output_path));
+		
+		//System.exit(job.waitForCompletion(true) ? 0 : 1);
+		job1.waitForCompletion(true);
+		
+		/*
+		 * 	Global word count by author
+		 */
+		
+		Job job2=Job.getInstance(conf);
+		job2.setJarByClass(GlobalCount.class);
+		
+		job2.setMapperClass(CalculateTFMapper.class);
+		job2.setReducerClass(CalculateTFReducer.class);
+		
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(Text.class);
+		
+		job2.setInputFormatClass(TextInputFormat.class);
+		job2.setOutputFormatClass(TextOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job2, new Path(output_path));
+		FileOutputFormat.setOutputPath(job2, new Path(args[1]));
+		
+		job2.waitForCompletion(true);
 	}
 }

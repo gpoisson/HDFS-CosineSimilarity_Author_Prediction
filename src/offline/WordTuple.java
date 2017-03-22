@@ -9,4 +9,8 @@ public class WordTuple {
 		this.word = word;
 		this.count = count;
 	}
+	
+	public String toString() {
+		return (word + ", " + count);
+	}
 }
