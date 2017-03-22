@@ -1,6 +1,5 @@
 package offline;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,5 +69,89 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job2, new Path("data/tf/"));
 		
 		job2.waitForCompletion(true);
+		
+		/*
+		 * 	Author count
+		 */
+		
+		Job job3=Job.getInstance(conf);
+		job3.setJarByClass(MainClass.class);
+		
+		job3.setMapperClass(AuthorCountMapper.class);
+		job3.setReducerClass(AuthorCountReducer.class);
+		
+		job3.setOutputKeyClass(Text.class);
+		job3.setOutputValueClass(Text.class);
+		
+		job3.setInputFormatClass(TextInputFormat.class);
+		job3.setOutputFormatClass(TextOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job3, new Path("data/word_count/"));
+		FileOutputFormat.setOutputPath(job3, new Path("data/author_count/"));
+		
+		job3.waitForCompletion(true);
+		
+		/*
+		 * 	Number of authors using a word
+		 */
+		
+		Job job4=Job.getInstance(conf);
+		job4.setJarByClass(MainClass.class);
+		
+		job4.setMapperClass(AuthorWordUseCountMapper.class);
+		job4.setReducerClass(AuthorWordUseCountReducer.class);
+		
+		job4.setOutputKeyClass(Text.class);
+		job4.setOutputValueClass(Text.class);
+		
+		job4.setInputFormatClass(TextInputFormat.class);
+		job4.setOutputFormatClass(TextOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job4, new Path("data/word_count/"));
+		FileOutputFormat.setOutputPath(job4, new Path("data/author_word_use_count/"));
+		
+		job4.waitForCompletion(true);
+		
+		/*
+		 * 	Calculate IDF
+		 */
+		
+		Job job5=Job.getInstance(conf);
+		job5.setJarByClass(MainClass.class);
+		
+		job5.setMapperClass(CalculateIDFMapper.class);
+		job5.setReducerClass(CalculateIDFReducer.class);
+		
+		job5.setOutputKeyClass(Text.class);
+		job5.setOutputValueClass(Text.class);
+		
+		job5.setInputFormatClass(TextInputFormat.class);
+		job5.setOutputFormatClass(TextOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job5, new Path("data/author_count/", "data/author_word_use_count/"));
+		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));
+		
+		job5.waitForCompletion(true);
+		
+		/*
+		 * 	Calculate AAVs
+		 */
+		
+		Job job6=Job.getInstance(conf);
+		job6.setJarByClass(MainClass.class);
+		
+		job6.setMapperClass(CalculateAAVMapper.class);
+		job6.setReducerClass(CalculateAAVReducer.class);
+		
+		job6.setOutputKeyClass(Text.class);
+		job6.setOutputValueClass(Text.class);
+		
+		job6.setInputFormatClass(TextInputFormat.class);
+		job6.setOutputFormatClass(TextOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job6, new Path("data/idf/", "data/tf/"));
+		FileOutputFormat.setOutputPath(job6, new Path("data/aavs/"));
+		
+		job6.waitForCompletion(true);
 	}
 }
