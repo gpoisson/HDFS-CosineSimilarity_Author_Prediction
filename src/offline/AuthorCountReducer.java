@@ -15,6 +15,6 @@ public class AuthorCountReducer extends Reducer<Text,Text,Text,IntWritable> {
 		for (Text val: values) {
 			count++;
 		}
-		context.write(key, new IntWritable(1));
+		context.write(key, new IntWritable(count));
 	}
 }
