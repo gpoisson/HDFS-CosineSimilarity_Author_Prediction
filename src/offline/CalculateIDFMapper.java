@@ -13,26 +13,26 @@ public class CalculateIDFMapper extends Mapper<LongWritable, Text, Text, Text> {
 	public void map(LongWritable   key,   Text   value,   Context   context) throws IOException, InterruptedException{
 		
 		String[] lines = value.toString().split("\n");
-		int author_count = 1;
+		int author_count = 0;
 		ArrayList<String> terms = new ArrayList<String>();
 		ArrayList<Integer> counts = new ArrayList<Integer>();
 		
 		
 		for (String line: lines) {
 			String[] line_split = line.split("\t");
-			if (line_split[0].equals("authors:")) {
-				author_count = Integer.parseInt(line_split[1]);
+			if (line_split[0].equals("author:")) {
+				author_count++;
 			}
 			else {
 				terms.add(line_split[0]);
-				counts.add(Integer.parseInt(line_split[1]));
+				counts.add(Integer.parseInt(line_split[2]));
 			}
 		}
 		
 		for (int i = 0; i < terms.size(); i++) {
-			double idf = Math.log(author_count/counts.get(i));
-			context.write(new Text(terms.get(i)), new Text(idf + ""));
+			context.write(new Text(terms.get(i)), new Text(counts.get(i) + ""));
 		}
+		context.write(new Text("authors:"), new Text(author_count + ""));
 		
 		
 	}
