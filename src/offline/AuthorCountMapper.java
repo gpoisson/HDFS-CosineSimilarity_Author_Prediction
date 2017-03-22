@@ -18,7 +18,14 @@ public class AuthorCountMapper extends Mapper<LongWritable, Text, Text, Text> {
 			line = line.toLowerCase();
 			String[] split_line = line.split("\t");
 			String author = split_line[1];
-			authors.add(author);
+			boolean found = false;
+			for (String known: authors) {
+				if (known.equals(author)) found = true;
+				break;
+			}
+			if (!found) {
+				authors.add(author);
+			}
 		}		
 
 		for (String author: authors) {
