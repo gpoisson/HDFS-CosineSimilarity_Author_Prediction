@@ -30,19 +30,10 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 			counts.add(Integer.parseInt(entry[1]));
 		}
 		
-		context.write(new Text(most_common), new FloatWritable());
-
-		//ArrayList<Float> tfs = new ArrayList<Float>();
-		//ArrayList<Text> words = new ArrayList<Text>();
-		
 		for (int i = 0; i < terms.size(); i++) {
 			int count = counts.get(i);
 			float tf = (float) (0.5 + 0.5 * (((float) count) / max_occurrances));
-			context.write(new Text(key.toString() + " " + terms.get(i)), new FloatWritable (tf));
+			context.write(new Text(key.toString() + "\t" + terms.get(i)), new FloatWritable (tf));
 		}
-				
-		//for (int i = 0; i < tfs.size(); i++) {
-		//	context.write((words.get(i)), new FloatWritable(tfs.get(i)));
-		//}
 	}
 }
