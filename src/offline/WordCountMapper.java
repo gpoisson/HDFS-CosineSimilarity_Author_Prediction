@@ -31,7 +31,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 				if (line_split[line_split.length-1].charAt(i) >= 'a' && line_split[line_split.length-1].charAt(i) <= 'z') {
 					cleaned_text += line_split[line_split.length-1].charAt(i);
 				}
-				else if ((line_split[line_split.length-1].charAt(i) == ' ') || (line_split[line_split.length-1].charAt(i) == '\t')) {
+				else if ((line_split[line_split.length-1].charAt(i) == ' ') || (line_split[line_split.length-1].charAt(i) == '\t') || (line_split[line_split.length-1].charAt(i) == '\n')) {
 					if (cleaned_text.length() > 0) {
 						words.add(cleaned_text);
 						cleaned_text = new String();
