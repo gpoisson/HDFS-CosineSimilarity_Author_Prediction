@@ -20,16 +20,15 @@ public class AuthorCountMapper extends Mapper<LongWritable, Text, Text, Text> {
 			String author = split_line[1];
 			boolean found = false;
 			for (String known: authors) {
-				if (known.equals(author)) found = true;
-				break;
+				if (known.equals(author)) {
+					found = true;
+					break;
+				}
 			}
 			if (!found) {
 				authors.add(author);
+				context.write(new Text("authors:"), new Text(author));
 			}
 		}		
-
-		for (String author: authors) {
-			context.write(new Text("authors:"), new Text(author));
-		}
 	}
 }
