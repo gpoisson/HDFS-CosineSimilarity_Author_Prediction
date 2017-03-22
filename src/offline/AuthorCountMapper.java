@@ -3,6 +3,7 @@ package offline;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -15,7 +16,6 @@ public class AuthorCountMapper extends Mapper<LongWritable, Text, Text, Text> {
 		String[] lines = value.toString().split("\n");
 		ArrayList<String> authors = new ArrayList<String>();
 		for (String line: lines) {
-			line = line.toLowerCase();
 			String[] split_line = line.split("\t");
 			String author = split_line[1];
 			boolean found = false;
@@ -27,8 +27,10 @@ public class AuthorCountMapper extends Mapper<LongWritable, Text, Text, Text> {
 			}
 			if (!found) {
 				authors.add(author);
-				context.write(new Text("authors:"), new Text(author));
 			}
 		}		
+		for (String author: authors) {
+			context.write(new Text("authors: " + authors.size() + ":"), new Text(author));
+		}
 	}
 }
