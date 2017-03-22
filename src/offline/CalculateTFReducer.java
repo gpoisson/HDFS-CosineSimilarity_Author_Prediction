@@ -10,9 +10,11 @@ import org.apache.hadoop.mapred.join.TupleWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
 
-public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
+public class CalculateTFReducer extends Reducer<Text,Text,Text,IntWritable> {
 
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
+		
+		// Keys: authors		Values: (<word>  <count>)
 		int max_occurrances = 0;
 		String most_common = new String();
 		for (Text val: values) {
@@ -31,12 +33,11 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 			String term = entry[0];
 			int count = Integer.parseInt(entry[1]);
 			float tf = (float) (0.5 + 0.5 * (((float) count) / max_occurrances));
-			tfs.add(tf);
-			words.add(new Text(key.toString() + " " + val.toString()));
+			words.add(new Text(key.toString() + " " + val.toString() + " " + tf));
 		}
 		
 		for (int i = 0; i < tfs.size(); i++) {
-			context.write((words.get(i)), new FloatWritable(tfs.get(i)));
+			context.write((words.get(i)), new IntWritable(1));
 		}
 	}
 }
