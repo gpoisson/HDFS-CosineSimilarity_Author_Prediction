@@ -9,6 +9,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
@@ -123,10 +124,12 @@ public class MainClass {
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
 		
-		job5.setInputFormatClass(TextInputFormat.class);
-		job5.setOutputFormatClass(TextOutputFormat.class);
+		//job5.setInputFormatClass(TextInputFormat.class);
+		//job5.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job5, new Path("data/author_count/", "data/author_word_use_count/"));
+		//FileInputFormat.setInputPaths(job5, new Path("data/author_count/", "data/author_word_use_count/"));
+		MultipleInputs.addInputPath(job5, new Path("data/author_count/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job5, new Path("data/author_word_use_count/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));
 		
 		job5.waitForCompletion(true);
