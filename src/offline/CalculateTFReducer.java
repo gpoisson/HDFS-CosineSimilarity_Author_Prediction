@@ -40,6 +40,8 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 			words.add(new Text(key.toString() + " " + term));
 		}
 		
+		context.write(new Text(tfs.size() + ""), new FloatWritable());
+		
 		for (int i = 0; i < tfs.size(); i++) {
 			context.write((words.get(i)), new FloatWritable(tfs.get(i)));
 		}
