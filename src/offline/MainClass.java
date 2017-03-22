@@ -27,7 +27,7 @@ public class MainClass {
 		Configuration conf = new Configuration();
 		
 		/*
-		 *	Individual word count 
+		 *	Individual word/author count 
 		 */
 		
 		Job job1=Job.getInstance(conf);
@@ -50,7 +50,7 @@ public class MainClass {
 		job1.waitForCompletion(true);
 		
 		/*
-		 * 	Global word count by author
+		 * 	Calculate TF
 		 */
 		
 		Job job2=Job.getInstance(conf);
