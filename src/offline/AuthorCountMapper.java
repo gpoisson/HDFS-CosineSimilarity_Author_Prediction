@@ -29,7 +29,7 @@ public class AuthorCountMapper extends Mapper<LongWritable, Text, Text, Text> {
 		}		
 
 		for (String author: authors) {
-			context.write(new Text(author), new Text("one"));
+			context.write(new Text("authors:"), new Text(author));
 		}
 	}
 }

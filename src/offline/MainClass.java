@@ -150,7 +150,8 @@ public class MainClass {
 		job6.setInputFormatClass(TextInputFormat.class);
 		job6.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job6, new Path("data/idf/", "data/tf/"));
+		MultipleInputs.addInputPath(job5, new Path("data/idf/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job5, new Path("data/tf/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job6, new Path(args[1]));
 		
 		job6.waitForCompletion(true);
