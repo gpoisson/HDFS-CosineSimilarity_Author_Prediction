@@ -1,4 +1,4 @@
-package profile_1A;
+package offline;
 
 public class WordTuple {
 
