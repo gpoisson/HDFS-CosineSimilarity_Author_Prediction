@@ -25,7 +25,6 @@ public class MainClass {
 			System.exit(-1);
 		}
 		
-		String output_path = "intermediate_output";
 		Configuration conf = new Configuration();
 		
 		/*
@@ -46,7 +45,7 @@ public class MainClass {
 		
 		FileInputFormat.setInputPaths(job1, new Path(args[0]));
 		//FileOutputFormat.setOutputPath(job, new Path(args[1]));		
-		FileOutputFormat.setOutputPath(job1, new Path(output_path));
+		FileOutputFormat.setOutputPath(job1, new Path("data/word_count/"));
 		
 		//System.exit(job.waitForCompletion(true) ? 0 : 1);
 		job1.waitForCompletion(true);
@@ -67,8 +66,8 @@ public class MainClass {
 		job2.setInputFormatClass(TextInputFormat.class);
 		job2.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job2, new Path(output_path));
-		FileOutputFormat.setOutputPath(job2, new Path(args[1]));
+		FileInputFormat.setInputPaths(job2, new Path("data/word_count/"));
+		FileOutputFormat.setOutputPath(job2, new Path("data/tf/"));
 		
 		job2.waitForCompletion(true);
 	}
