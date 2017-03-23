@@ -27,10 +27,8 @@ public class MainClass {
 		
 		Configuration conf = new Configuration();
 		
-		/*
-		 *	Individual word/author count 
-		 */
-		
+		//	Individual word/author count 
+
 		Job job1=Job.getInstance(conf);
 		job1.setJarByClass(MainClass.class);
 		
@@ -48,10 +46,9 @@ public class MainClass {
 		
 		job1.waitForCompletion(true);
 		
-		/*
-		 * 	Calculate TF
-		 */
 		
+		// 	Calculate TF
+				
 		Job job2=Job.getInstance(conf);
 		job2.setJarByClass(MainClass.class);
 		
@@ -68,15 +65,15 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job2, new Path("data/tf/"));
 		
 		job2.waitForCompletion(true);
+	
 		
-		/*
-		 * 	Author count
-		 */
+		// 	Author count
 		
 		Job job3=Job.getInstance(conf);
 		job3.setJarByClass(MainClass.class);
 		
 		job3.setMapperClass(AuthorCountMapper.class);
+		//job3.setCombinerClass(AuthorCountCombiner.class);
 		job3.setReducerClass(AuthorCountReducer.class);
 		
 		job3.setOutputKeyClass(Text.class);
@@ -90,9 +87,7 @@ public class MainClass {
 		
 		job3.waitForCompletion(true);
 		
-		/*
-		 * 	Number of authors using a word
-		 */
+		// 	Number of authors using a word
 		
 		Job job4=Job.getInstance(conf);
 		job4.setJarByClass(MainClass.class);
@@ -111,9 +106,7 @@ public class MainClass {
 				
 		job4.waitForCompletion(true);
 		
-		/*
-		 * 	Calculate IDF
-		 */
+		// 	Calculate IDF
 		
 		Job job5=Job.getInstance(conf);
 		job5.setJarByClass(MainClass.class);
@@ -129,16 +122,14 @@ public class MainClass {
 		//job5.setInputFormatClass(TextInputFormat.class);
 		//job5.setOutputFormatClass(TextOutputFormat.class);
 		
-		//FileInputFormat.setInputPaths(job5, new Path("data/author_count/", "data/author_word_use_count/"));
-		MultipleInputs.addInputPath(job5, new Path("data/author_count/"), TextInputFormat.class);
-		MultipleInputs.addInputPath(job5, new Path("data/author_word_use_count/"), TextInputFormat.class);
+		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));
+		//MultipleInputs.addInputPath(job5, new Path("data/author_count/"), TextInputFormat.class);
+		//MultipleInputs.addInputPath(job5, new Path("data/author_word_use_count/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));
 		
 		job5.waitForCompletion(true);
 		
-		/*
-		 * 	Calculate AAVs
-		 */
+		// 	Calculate AAVs
 		
 		Job job6=Job.getInstance(conf);
 		job6.setJarByClass(MainClass.class);
@@ -152,8 +143,8 @@ public class MainClass {
 		job6.setInputFormatClass(TextInputFormat.class);
 		job6.setOutputFormatClass(TextOutputFormat.class);
 		
-		MultipleInputs.addInputPath(job5, new Path("data/idf/"), TextInputFormat.class);
-		MultipleInputs.addInputPath(job5, new Path("data/tf/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job6, new Path("data/idf/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job6, new Path("data/tf/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job6, new Path(args[1]));
 		
 		job6.waitForCompletion(true);

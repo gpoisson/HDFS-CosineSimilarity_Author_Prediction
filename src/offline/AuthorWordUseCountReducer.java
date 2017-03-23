@@ -15,7 +15,8 @@ public class AuthorWordUseCountReducer extends Reducer<Text,Text,Text,IntWritabl
 		for (Text val: values) {
 			count++;
 		}
-		
-		context.write(key, new IntWritable(count));
+		if (key != null && count > 0) {
+			context.write(key, new IntWritable(count));
+		}
 	}
 }
