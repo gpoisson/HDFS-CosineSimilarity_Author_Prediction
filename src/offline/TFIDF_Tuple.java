@@ -10,16 +10,16 @@ import java.util.ArrayList;
 public class TFIDF_Tuple {
 	
 	public ArrayList<Float> tf_values;
-	public float idf;
+	public ArrayList<Float> idf;
 	public ArrayList<Float> tfidf_values;
 	public String word;
 	public ArrayList<String> authors;
 	
 	public TFIDF_Tuple() {
 		tf_values = new ArrayList<Float>();
+		idf = new ArrayList<Float>();
 		tfidf_values = new ArrayList<Float>();
 		authors = new ArrayList<String>();
-		idf = (float) 0.0;
 	}
 
 }

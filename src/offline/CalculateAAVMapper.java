@@ -25,7 +25,7 @@ public void map(LongWritable   key,   Text   value,   Context   context) throws 
 			boolean found = false;
 			for (int i = 0; i < tfidfs.size(); i++){
 				if (tfidfs.get(i).word.equals(word)){
-					tfidfs.get(i).idf = idf;
+					tfidfs.get(i).idf.add(idf);
 					found = true;
 					break;
 				}
@@ -33,10 +33,10 @@ public void map(LongWritable   key,   Text   value,   Context   context) throws 
 			if (!found) {
 				TFIDF_Tuple new_entry = new TFIDF_Tuple();
 				new_entry.word = word;
-				new_entry.idf = idf;
+				new_entry.idf.add(idf);
 				tfidfs.add(new_entry);
 			}
-			//context.write(new Text(word), new Text("idf\t" + idf ));
+			context.write(new Text(word), new Text("idf TEST\t" + idf ));
 		}
 		else if (line_split[0].substring(0, 3).equals("tf_")){
 			author = line_split[0].substring(3);
@@ -58,15 +58,15 @@ public void map(LongWritable   key,   Text   value,   Context   context) throws 
 				new_entry.authors.add(author);
 				tfidfs.add(new_entry);
 			}
-			//context.write(new Text(word), new Text("tf\t" + author + "\t" + tf));
+			context.write(new Text(word), new Text("tf\t" + author + "\t" + tf));
 		}
 	}
 	
 	for (TFIDF_Tuple entry: tfidfs) {
 		for (int i = 0; i < entry.tf_values.size(); i++){
-			float tfidf = entry.tf_values.get(i) * entry.idf;
-			entry.tfidf_values.add(tfidf);
-			context.write(new Text(entry.authors.get(i)), new Text(entry.word + " " + entry.tf_values.get(i) + " " + entry.idf + "   " + tfidf));
+			//float tfidf = entry.tf_values.get(i) * entry.idf.get(0);
+			//entry.tfidf_values.add(tfidf);
+			//context.write(new Text(entry.authors.get(i)), new Text(entry.word + " " + entry.tf_values.get(i) + " " + entry.idf + "   " + tfidf));
 		}
 	}
 }
