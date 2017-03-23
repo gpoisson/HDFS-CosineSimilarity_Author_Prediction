@@ -9,17 +9,18 @@ import java.util.ArrayList;
 
 public class TFIDF_Tuple {
 	
-	public ArrayList<Float> tf_values;
-	public ArrayList<Float> idf;
-	public ArrayList<Float> tfidf_values;
+	public float tf_value;
+	public float idf;
+	public float tfidf_value;
 	public String word;
-	public ArrayList<String> authors;
+	public String author;
 	
 	public TFIDF_Tuple() {
-		tf_values = new ArrayList<Float>();
-		idf = new ArrayList<Float>();
-		tfidf_values = new ArrayList<Float>();
-		authors = new ArrayList<String>();
+		
+	}
+	
+	public String toString() {
+		return word + "," + author + "," + tf_value + "," + idf;
 	}
 
 }
