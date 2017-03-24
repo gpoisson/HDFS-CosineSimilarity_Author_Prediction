@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -73,7 +75,6 @@ public class MainClass {
 		job3.setJarByClass(MainClass.class);
 		
 		job3.setMapperClass(AuthorCountMapper.class);
-		//job3.setCombinerClass(AuthorCountCombiner.class);
 		job3.setReducerClass(AuthorCountReducer.class);
 		
 		job3.setOutputKeyClass(Text.class);
@@ -86,6 +87,25 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job3, new Path("data/author_count/"));
 		
 		job3.waitForCompletion(true);
+		
+//	 	Author names
+		
+		Job job3_2=Job.getInstance(conf);
+		job3_2.setJarByClass(MainClass.class);
+			
+		job3_2.setMapperClass(AuthorNamesMapper.class);
+		job3_2.setReducerClass(AuthorNamesReducer.class);
+			
+		job3_2.setOutputKeyClass(Text.class);
+		job3_2.setOutputValueClass(Text.class);
+			
+		job3_2.setInputFormatClass(TextInputFormat.class);
+		job3_2.setOutputFormatClass(TextOutputFormat.class);
+			
+		FileInputFormat.setInputPaths(job3_2, new Path("data/word_count/"));
+		FileOutputFormat.setOutputPath(job3_2, new Path("data/author_names/"));
+			
+		job3_2.waitForCompletion(true);
 		
 		// 	Number of authors using a word
 		
@@ -116,13 +136,20 @@ public class MainClass {
 		job5.setMapperClass(CalculateIDFMapper.class);
 		job5.setReducerClass(CalculateIDFReducer.class);
 		
+		/*FileSystem fileSystem = FileSystem.get(conf);
+		Path path = new Path("data/author_count/");
+		FSDataInputStream in = fileSystem.open(path);
+		
+		job5.addFileToClassPath(path);
+		*/
+		
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
 		
 		//job5.setInputFormatClass(TextInputFormat.class);
 		//job5.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));
+		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));		
 		//MultipleInputs.addInputPath(job5, new Path("data/author_count/"), TextInputFormat.class);
 		//MultipleInputs.addInputPath(job5, new Path("data/author_word_use_count/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));

@@ -27,6 +27,25 @@ public class MainClass {
 		
 		Configuration conf = new Configuration();
 		
+		// Create attribute vector
+		
+		Job job1=Job.getInstance(conf);
+		job1.setJarByClass(MainClass.class);
+		
+		job1.setMapperClass(NewDocAAVMapper.class);
+		job1.setReducerClass(NewDocAAVReducer.class);
+		
+		job1.setOutputKeyClass(Text.class);
+		job1.setOutputValueClass(Text.class);
+		
+		job1.setInputFormatClass(TextInputFormat.class);
+		job1.setOutputFormatClass(TextOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job1, new Path(args[0]));	
+		FileOutputFormat.setOutputPath(job1, new Path("data/word_count/"));
+		
+		job1.waitForCompletion(true);
+		
 		/*
 		
 		//	Individual word/author count 

@@ -3,6 +3,9 @@ package offline;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -26,10 +29,64 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 				new_entry.tf_value = Float.parseFloat(line_split[2]);
 				tfs.add(new_entry);
 			}
-			//ntext.write(new Text()), new Text("TYPE: " + line_split[0] + "ENTRY: " + new_entry.toString()));
 		}
 		
-		//context.write(new Text("TFs: " + tfs.size()), new Text("IDFs: " + idfs.size()));
+		// Load author names list
+		// Determine whether an author used a word
+		
+		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
+		Path path = new Path("data/author_names/part-r-00000");
+		FSDataInputStream in = fileSystem.open(path);
+		
+		int size = in.available();
+		String author_line = new String();
+		
+		byte[] data = new byte[size];
+		in.readFully(0, data);
+		in.close();
+		
+		for (byte b: data){
+			author_line += (char) b;
+		}
+		
+		String[] author_names = author_line.split("\n");
+		
+		for (String name: author_names){
+			name = name.split("\t")[0];
+		}
+		
+		int author_count = author_names.length;
+		
+		ArrayList<String> users = new ArrayList<String>();
+		String current = tfs.get(0).word;
+		for (TFIDF_Tuple tf: tfs) {
+			if (tf.word.equals(current)){
+				users.add(tf.author);
+			}
+			else {
+				if (users.size() != author_names.length){
+					for (String author: author_names){
+						boolean found = false;
+						for (String user: users){
+							if (author.equals(user)){
+								found = true;
+								break;
+							}
+						}
+						if (!found){
+							TFIDF_Tuple new_entry = new TFIDF_Tuple();
+							new_entry.word = current;
+							new_entry.author = author;
+							new_entry.tf_value = (float) 0.5;
+							tfs.add(new_entry);
+							current = tf.word;
+							users = new ArrayList<String>();
+						}
+					}
+				}
+			}
+		}
+		
 		for (TFIDF_Tuple idf: idfs) {
 			for (TFIDF_Tuple tf: tfs) {
 				if (idf.word.equals(tf.word)) {
@@ -39,9 +96,6 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 				}
 			}
 		}
-		/*for (Text val: values) {
-			context.write(key, new Text(val));
-		}*/
 	}
 
 }
