@@ -204,6 +204,23 @@ public class MainClass {
 		
 		job8.waitForCompletion(true);
 		
+		//	 Compute cosine similarity
+		
+		Job job9=Job.getInstance(conf);
+		job9.setJarByClass(MainClass.class);
+		
+		job9.setMapperClass(CosSimilarityMapper.class);
+		job9.setCombinerClass(CosSimilarityReducer.class);
+		job9.setReducerClass(CosSimilarityReducer.class);
+		
+		job9.setOutputKeyClass(Text.class);
+		job9.setOutputValueClass(Text.class);
+		
+		FileInputFormat.setInputPaths(job9, new Path("mystery_data/adjusted_aav/"));		
+		FileOutputFormat.setOutputPath(job9, new Path("mystery_data/final_predictions/"));
+		
+		job9.waitForCompletion(true);
+		
 		
 	}
 }
