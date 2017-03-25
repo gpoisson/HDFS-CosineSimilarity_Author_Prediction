@@ -10,7 +10,7 @@ public class WordCountReducer extends Reducer<Text,Text,Text,IntWritable>{
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
 		int count = 0;
 		
-		for (Text val: values) {
+		for (@SuppressWarnings("unused") Text val: values) {
 			count++;
 		}
 		

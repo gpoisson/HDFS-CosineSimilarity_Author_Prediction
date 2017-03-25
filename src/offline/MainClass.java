@@ -1,12 +1,7 @@
 package offline;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -88,7 +83,7 @@ public class MainClass {
 		
 		job3.waitForCompletion(true);
 		
-//	 	Author names
+		// 	Author names
 		
 		Job job3_2=Job.getInstance(conf);
 		job3_2.setJarByClass(MainClass.class);
@@ -131,27 +126,13 @@ public class MainClass {
 		Job job5=Job.getInstance(conf);
 		job5.setJarByClass(MainClass.class);
 		
-		//job5.addCacheFile(new Path("data/author_word_use_count/").toUri());
-		
 		job5.setMapperClass(CalculateIDFMapper.class);
 		job5.setReducerClass(CalculateIDFReducer.class);
-		
-		/*FileSystem fileSystem = FileSystem.get(conf);
-		Path path = new Path("data/author_count/");
-		FSDataInputStream in = fileSystem.open(path);
-		
-		job5.addFileToClassPath(path);
-		*/
 		
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
 		
-		//job5.setInputFormatClass(TextInputFormat.class);
-		//job5.setOutputFormatClass(TextOutputFormat.class);
-		
 		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));		
-		//MultipleInputs.addInputPath(job5, new Path("data/author_count/"), TextInputFormat.class);
-		//MultipleInputs.addInputPath(job5, new Path("data/author_word_use_count/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));
 		
 		job5.waitForCompletion(true);

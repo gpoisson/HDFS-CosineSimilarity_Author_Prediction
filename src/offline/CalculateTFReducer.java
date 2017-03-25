@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.hadoop.io.FloatWritable;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.join.TupleWritable;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Reducer.Context;
 
 public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 
@@ -16,7 +13,6 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 		
 		// Keys: authors		Values: (<word>  <count>)
 		int max_occurrances = -1;
-		String most_common = new String();
 		ArrayList<String> terms = new ArrayList<String>();
 		ArrayList<Integer> counts = new ArrayList<Integer>();
 		for (Text val: values) {
@@ -24,7 +20,6 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 			assert(entry.length == 2);
 			if (Integer.parseInt(entry[1]) > max_occurrances){
 				max_occurrances = Integer.parseInt(entry[1]);
-				most_common = entry[0];
 			}
 			terms.add(entry[0]);
 			counts.add(Integer.parseInt(entry[1]));

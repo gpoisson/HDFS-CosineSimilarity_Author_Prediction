@@ -5,8 +5,6 @@
 
 package offline;
 
-import java.util.ArrayList;
-
 public class TFIDF_Tuple {
 	
 	public float tf_value;

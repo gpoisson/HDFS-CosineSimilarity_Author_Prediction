@@ -55,34 +55,21 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 			name = name.split("\t")[0];
 		}
 		
-		int author_count = author_names.length;
-		
-		ArrayList<String> users = new ArrayList<String>();
-		String current = tfs.get(0).word;
-		for (TFIDF_Tuple tf: tfs) {
-			if (tf.word.equals(current)){
-				users.add(tf.author);
-			}
-			else {
-				if (users.size() != author_names.length){
-					for (String author: author_names){
-						boolean found = false;
-						for (String user: users){
-							if (author.equals(user)){
-								found = true;
-								break;
-							}
-						}
-						if (!found){
-							TFIDF_Tuple new_entry = new TFIDF_Tuple();
-							new_entry.word = current;
-							new_entry.author = author;
-							new_entry.tf_value = (float) 0.5;
-							tfs.add(new_entry);
-							current = tf.word;
-							users = new ArrayList<String>();
-						}
+		for (TFIDF_Tuple idf: idfs) {
+			for (String author: author_names) {
+				boolean found = false;
+				for (TFIDF_Tuple tf: tfs) {
+					if (tf.author.equals(author) && tf.word.equals(idf.word)){
+						found = true;
+						break;
 					}
+				}
+				if (!found) {
+					TFIDF_Tuple new_entry = new TFIDF_Tuple();
+					new_entry.word = idf.word;
+					new_entry.author = author;
+					new_entry.tf_value = (float) (0.5);
+					tfs.add(new_entry);					
 				}
 			}
 		}

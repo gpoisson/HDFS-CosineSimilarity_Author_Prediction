@@ -1,9 +1,6 @@
 package online;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -13,6 +10,21 @@ import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
+import offline.AuthorCountMapper;
+import offline.AuthorCountReducer;
+import offline.AuthorNamesMapper;
+import offline.AuthorNamesReducer;
+import offline.AuthorWordUseCountMapper;
+import offline.AuthorWordUseCountReducer;
+import offline.CalculateAAVMapper;
+import offline.CalculateAAVReducer;
+import offline.CalculateIDFMapper;
+import offline.CalculateIDFReducer;
+import offline.CalculateTFMapper;
+import offline.CalculateTFReducer;
+import offline.WordCountMapper;
+import offline.WordCountReducer;
 
 public class MainClass {
 	
@@ -26,27 +38,6 @@ public class MainClass {
 		}
 		
 		Configuration conf = new Configuration();
-		
-		// Create attribute vector
-		
-		Job job1=Job.getInstance(conf);
-		job1.setJarByClass(MainClass.class);
-		
-		job1.setMapperClass(NewDocAAVMapper.class);
-		job1.setReducerClass(NewDocAAVReducer.class);
-		
-		job1.setOutputKeyClass(Text.class);
-		job1.setOutputValueClass(Text.class);
-		
-		job1.setInputFormatClass(TextInputFormat.class);
-		job1.setOutputFormatClass(TextOutputFormat.class);
-		
-		FileInputFormat.setInputPaths(job1, new Path(args[0]));	
-		FileOutputFormat.setOutputPath(job1, new Path("data/word_count/"));
-		
-		job1.waitForCompletion(true);
-		
-		/*
 		
 		//	Individual word/author count 
 
@@ -63,7 +54,7 @@ public class MainClass {
 		job1.setOutputFormatClass(TextOutputFormat.class);
 		
 		FileInputFormat.setInputPaths(job1, new Path(args[0]));	
-		FileOutputFormat.setOutputPath(job1, new Path("data/word_count/"));
+		FileOutputFormat.setOutputPath(job1, new Path("mystery_data/word_count/"));
 		
 		job1.waitForCompletion(true);
 		
@@ -82,8 +73,8 @@ public class MainClass {
 		job2.setInputFormatClass(TextInputFormat.class);
 		job2.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job2, new Path("data/word_count/"));
-		FileOutputFormat.setOutputPath(job2, new Path("data/tf/"));
+		FileInputFormat.setInputPaths(job2, new Path("mystery_data/word_count/"));
+		FileOutputFormat.setOutputPath(job2, new Path("mystery_data/tf/"));
 		
 		job2.waitForCompletion(true);
 	
@@ -94,7 +85,6 @@ public class MainClass {
 		job3.setJarByClass(MainClass.class);
 		
 		job3.setMapperClass(AuthorCountMapper.class);
-		//job3.setCombinerClass(AuthorCountCombiner.class);
 		job3.setReducerClass(AuthorCountReducer.class);
 		
 		job3.setOutputKeyClass(Text.class);
@@ -103,10 +93,29 @@ public class MainClass {
 		job3.setInputFormatClass(TextInputFormat.class);
 		job3.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job3, new Path("data/word_count/"));
-		FileOutputFormat.setOutputPath(job3, new Path("data/author_count/"));
+		FileInputFormat.setInputPaths(job3, new Path("mystery_data/word_count/"));
+		FileOutputFormat.setOutputPath(job3, new Path("mystery_data/author_count/"));
 		
 		job3.waitForCompletion(true);
+		
+		// 	Author names
+		
+		Job job3_2=Job.getInstance(conf);
+		job3_2.setJarByClass(MainClass.class);
+			
+		job3_2.setMapperClass(AuthorNamesMapper.class);
+		job3_2.setReducerClass(AuthorNamesReducer.class);
+			
+		job3_2.setOutputKeyClass(Text.class);
+		job3_2.setOutputValueClass(Text.class);
+			
+		job3_2.setInputFormatClass(TextInputFormat.class);
+		job3_2.setOutputFormatClass(TextOutputFormat.class);
+			
+		FileInputFormat.setInputPaths(job3_2, new Path("mystery_data/word_count/"));
+		FileOutputFormat.setOutputPath(job3_2, new Path("mystery_data/author_names/"));
+			
+		job3_2.waitForCompletion(true);
 		
 		// 	Number of authors using a word
 		
@@ -122,8 +131,8 @@ public class MainClass {
 		job4.setInputFormatClass(TextInputFormat.class);
 		job4.setOutputFormatClass(TextOutputFormat.class);
 		
-		FileInputFormat.setInputPaths(job4, new Path("data/word_count/"));
-		FileOutputFormat.setOutputPath(job4, new Path("data/author_word_use_count/"));
+		FileInputFormat.setInputPaths(job4, new Path("mystery_data/word_count/"));
+		FileOutputFormat.setOutputPath(job4, new Path("mystery_data/author_word_use_count/"));
 				
 		job4.waitForCompletion(true);
 		
@@ -132,21 +141,14 @@ public class MainClass {
 		Job job5=Job.getInstance(conf);
 		job5.setJarByClass(MainClass.class);
 		
-		//job5.addCacheFile(new Path("data/author_word_use_count/").toUri());
-		
 		job5.setMapperClass(CalculateIDFMapper.class);
 		job5.setReducerClass(CalculateIDFReducer.class);
 		
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
 		
-		//job5.setInputFormatClass(TextInputFormat.class);
-		//job5.setOutputFormatClass(TextOutputFormat.class);
-		
-		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));
-		//MultipleInputs.addInputPath(job5, new Path("data/author_count/"), TextInputFormat.class);
-		//MultipleInputs.addInputPath(job5, new Path("data/author_word_use_count/"), TextInputFormat.class);
-		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));
+		FileInputFormat.setInputPaths(job5, new Path("mystery_data/author_word_use_count/"));		
+		FileOutputFormat.setOutputPath(job5, new Path("mystery_data/idf/"));
 		
 		job5.waitForCompletion(true);
 		
@@ -164,12 +166,44 @@ public class MainClass {
 		job6.setInputFormatClass(TextInputFormat.class);
 		job6.setOutputFormatClass(TextOutputFormat.class);
 		
-		MultipleInputs.addInputPath(job6, new Path("data/idf/"), TextInputFormat.class);
-		MultipleInputs.addInputPath(job6, new Path("data/tf/"), TextInputFormat.class);
-		FileOutputFormat.setOutputPath(job6, new Path(args[1]));
+		MultipleInputs.addInputPath(job6, new Path("mystery_data/idf/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job6, new Path("mystery_data/tf/"), TextInputFormat.class);
+		FileOutputFormat.setOutputPath(job6, new Path("mystery_data/aav/"));
 		
 		job6.waitForCompletion(true);
 		
-		*/
+		// 	Discard new words
+		
+		Job job7=Job.getInstance(conf);
+		job7.setJarByClass(MainClass.class);
+		
+		job7.setMapperClass(FilterNewWordsMapper.class);
+		job7.setReducerClass(FilterNewWordsReducer.class);
+		
+		job7.setOutputKeyClass(Text.class);
+		job7.setOutputValueClass(Text.class);
+		
+		FileInputFormat.setInputPaths(job7, new Path("mystery_data/aav/"));		
+		FileOutputFormat.setOutputPath(job7, new Path("mystery_data/minimized_aav/"));
+		
+		job7.waitForCompletion(true);
+		
+		// 	Add unused words
+		
+		Job job8=Job.getInstance(conf);
+		job8.setJarByClass(MainClass.class);
+		
+		job8.setMapperClass(AdjustDimensionsMapper.class);
+		job8.setReducerClass(AdjustDimensionsReducer.class);
+		
+		job8.setOutputKeyClass(Text.class);
+		job8.setOutputValueClass(Text.class);
+		
+		FileInputFormat.setInputPaths(job8, new Path("mystery_data/minimized_aav/"));		
+		FileOutputFormat.setOutputPath(job8, new Path("mystery_data/adjusted_aav/"));
+		
+		job8.waitForCompletion(true);
+		
+		
 	}
 }
