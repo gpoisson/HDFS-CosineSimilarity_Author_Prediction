@@ -9,9 +9,9 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import offline.TFIDF_Tuple;
 
-public class CosSimilarityMapper  extends Mapper<Text, Text, Text, Text>{
+public class CosSimilarityMapper  extends Mapper<LongWritable, Text, Text, Text>{
 	
-	public void map(Text   key,   Text   value,   Context   context) throws IOException, InterruptedException{
+	public void map(LongWritable   key,   Text   value,   Context   context) throws IOException, InterruptedException{
 		String[] lines = value.toString().split("\n");
 		ArrayList<TFIDF_Tuple> knowns = new ArrayList<TFIDF_Tuple>();
 		ArrayList<TFIDF_Tuple> mystery = new ArrayList<TFIDF_Tuple>();
