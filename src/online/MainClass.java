@@ -183,7 +183,8 @@ public class MainClass {
 		job7.setOutputKeyClass(Text.class);
 		job7.setOutputValueClass(Text.class);
 		
-		FileInputFormat.setInputPaths(job7, new Path("mystery_data/aav/"));		
+		MultipleInputs.addInputPath(job7, new Path("data/idf/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job7, new Path("mystery_data/aav/"), TextInputFormat.class);	
 		FileOutputFormat.setOutputPath(job7, new Path("mystery_data/minimized_aav/"));
 		
 		job7.waitForCompletion(true);
