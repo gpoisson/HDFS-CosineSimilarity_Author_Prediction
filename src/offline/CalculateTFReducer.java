@@ -7,7 +7,7 @@ import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
+public class CalculateTFReducer extends Reducer<Text,Text,Text,Text> {
 
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
 		
@@ -28,7 +28,7 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,FloatWritable> {
 		for (int i = 0; i < terms.size(); i++) {
 			int count = counts.get(i);
 			float tf = (float) (0.5 + 0.5 * (((float) count) / max_occurrances));
-			context.write(new Text("tf_" + key.toString() + "\t" + terms.get(i)), new FloatWritable (tf));
+			context.write(new Text("tf_" + key.toString() + "\t" + terms.get(i)), new Text (tf + ""));
 		}
 	}
 }

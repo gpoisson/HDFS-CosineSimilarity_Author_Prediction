@@ -1,4 +1,4 @@
-package offline;
+package online;
 
 import java.io.IOException;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -13,7 +13,7 @@ public class CalculateIDFReducer extends Reducer<Text,Text,Text,Text> {
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
 		
 		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
-		Path path = new Path("data/author_count/part-r-00000");
+		Path path = new Path("mystery_data/author_count/part-r-00000");
 		FSDataInputStream in = fileSystem.open(path);
 		
 		int size = in.available();

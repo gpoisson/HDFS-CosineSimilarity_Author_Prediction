@@ -5,7 +5,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class AuthorNamesReducer extends Reducer<Text,Text,Text,IntWritable> {
+public class AuthorNamesReducer extends Reducer<Text,Text,Text,Text> {
 
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
 				
@@ -15,6 +15,6 @@ public class AuthorNamesReducer extends Reducer<Text,Text,Text,IntWritable> {
 			count++;
 		}
 		
-		context.write(key, new IntWritable(count));
+		context.write(key, new Text(count + ""));
 	}
 }

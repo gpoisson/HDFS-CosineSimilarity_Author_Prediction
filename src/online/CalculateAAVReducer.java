@@ -1,4 +1,4 @@
-package offline;
+package online;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +8,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+
+import offline.TFIDF_Tuple;
 
 public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 
@@ -35,7 +37,7 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		// Determine whether an author used a word
 		
 		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
-		Path path = new Path("data/author_names/part-r-00000");
+		Path path = new Path("mystery_data/author_names/part-r-00000");
 		FSDataInputStream in = fileSystem.open(path);
 		
 		int size = in.available();

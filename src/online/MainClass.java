@@ -18,9 +18,7 @@ import offline.AuthorNamesReducer;
 import offline.AuthorWordUseCountMapper;
 import offline.AuthorWordUseCountReducer;
 import offline.CalculateAAVMapper;
-import offline.CalculateAAVReducer;
 import offline.CalculateIDFMapper;
-import offline.CalculateIDFReducer;
 import offline.CalculateTFMapper;
 import offline.CalculateTFReducer;
 import offline.WordCountMapper;
@@ -77,7 +75,6 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job2, new Path("mystery_data/tf/"));
 		
 		job2.waitForCompletion(true);
-	
 		
 		// 	Author count
 		
@@ -200,7 +197,8 @@ public class MainClass {
 		job8.setOutputKeyClass(Text.class);
 		job8.setOutputValueClass(Text.class);
 		
-		FileInputFormat.setInputPaths(job8, new Path("mystery_data/minimized_aav/"));		
+		MultipleInputs.addInputPath(job8, new Path("data/idf/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job8, new Path("mystery_data/minimized_aav/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job8, new Path("mystery_data/adjusted_aav/"));
 		
 		job8.waitForCompletion(true);
@@ -217,7 +215,8 @@ public class MainClass {
 		job9.setOutputKeyClass(Text.class);
 		job9.setOutputValueClass(Text.class);
 		
-		FileInputFormat.setInputPaths(job9, new Path("mystery_data/adjusted_aav/"));		
+		MultipleInputs.addInputPath(job9, new Path("data/aavs/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job9, new Path("mystery_data/adjusted_aav/"), TextInputFormat.class); 
 		FileOutputFormat.setOutputPath(job9, new Path("mystery_data/final_predictions/"));
 		
 		job9.waitForCompletion(true);
