@@ -1,11 +1,7 @@
 package online;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -27,7 +23,6 @@ import offline.CalculateIDFMapper;
 import offline.CalculateIDFReducer;
 import offline.CalculateTFMapper;
 import offline.CalculateTFReducer;
-import offline.TFIDF_Tuple;
 import offline.WordCountMapper;
 import offline.WordCountReducer;
 
@@ -151,7 +146,7 @@ public class MainClass {
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
 		
-		FileInputFormat.setInputPaths(job5, new Path("mystery_data/author_word_use_count/"));		
+		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));		
 		FileOutputFormat.setOutputPath(job5, new Path("mystery_data/idf/"));
 		
 		job5.waitForCompletion(true);
@@ -245,43 +240,5 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job10, new Path("mystery_data/cos_sim_denominators/"));
 		
 		job10.waitForCompletion(true);
-		
-		
-		// 	Compute final cosine similarities
-		/*
-		
-		ArrayList<TFIDF_Tuple> cos_sims = new ArrayList<TFIDF_Tuple>();
-		ArrayList<TFIDF_Tuple> cos_nums = new ArrayList<TFIDF_Tuple>();
-		ArrayList<TFIDF_Tuple> cos_deoms = new ArrayList<TFIDF_Tuple>();
-		
-		FileSystem fileSystem = FileSystem.get(conf);
-		Path path = new Path("mystery_data/cos_sim_numerators/part-r-00000");
-		FSDataInputStream in = fileSystem.open(path);
-		
-		int size = in.available();
-		ArrayList<TFIDF_Tuple> numerators = new ArrayList<TFIDF_Tuple>();
-		String line = new String();
-		
-		byte[] data = new byte[size];
-		in.readFully(0, data);
-		in.close();
-		
-		for (byte b: data){
-			char next = (char) b;
-			if (next == '\n'){
-				TFIDF_Tuple entry = new TFIDF_Tuple();
-				String[] split = line.split("\t");
-				entry.author = split[0];
-				entry.tfidf_value = Float.parseFloat(split[1]);
-				cos_nums.add(entry);
-				line = new String();
-			}
-			else {
-				line += next;
-			}
-		}
-		*/
-		
-		
 	}
 }

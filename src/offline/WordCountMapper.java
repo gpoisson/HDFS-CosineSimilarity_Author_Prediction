@@ -18,17 +18,25 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 			
 			String author = line_split[0];
 			
+			String raw_text = line_split[line_split.length-1];
 			String cleaned_text = new String();
 			ArrayList<String> words = new ArrayList<String>();
-			for (int i = 0; i < line_split[line_split.length-1].length(); i++) {
-				if (line_split[line_split.length-1].charAt(i) >= 'a' && line_split[line_split.length-1].charAt(i) <= 'z') {
+			for (int i = 0; i < raw_text.length(); i++) {
+				if (raw_text.charAt(i) >= 'a' && raw_text.charAt(i) <= 'z') {
 					cleaned_text += line_split[line_split.length-1].charAt(i);
 				}
-				else if (cleaned_text.length() > 0) {
-						words.add(cleaned_text);
-						cleaned_text = new String();
-					}
+				else if ((raw_text.charAt(i) != ' ') && (raw_text.charAt(i) != '\t')) {
+					
 				}
+				else if (cleaned_text.length() > 0) {
+					words.add(cleaned_text);
+					cleaned_text = new String();
+				}
+			}
+			if (cleaned_text.length() > 0) {
+				words.add(cleaned_text);
+				cleaned_text = new String();
+			}
 			
 			
 			for (String word: words){

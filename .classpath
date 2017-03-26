@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/shapeshift/Documents/cs435_pa2/src/commons-logging-1.1.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/shapeshift/Documents/cs435_pa2/src/hadoop-common-2.6.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/shapeshift/Documents/cs435_pa2/src/hadoop-mapreduce-client-core-2.6.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/shapeshift/Documents/cs435_pa2/src/hadoop-mapreduce-client-jobclient-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/gpoisson/Documents/cs435/src/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/gpoisson/Documents/cs435/src/hadoop-common-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/gpoisson/Documents/cs435/src/hadoop-mapreduce-client-core-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/gpoisson/Documents/cs435/src/hadoop-mapreduce-client-jobclient-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
