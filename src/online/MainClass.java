@@ -204,24 +204,42 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job8, new Path("mystery_data/adjusted_aav/"));
 		
 		job8.waitForCompletion(true);
-		
-		//	 Compute cosine similarity
+
+		//	 Compute cosine similarity numerators (sums of the products)
 
 		Job job9=Job.getInstance(conf);
 		job9.setJarByClass(MainClass.class);
 		
-		job9.setMapperClass(CosSimilarityMapper.class);
-		job9.setCombinerClass(CosSimilarityCombiner.class);
-		job9.setReducerClass(CosSimilarityReducer.class);
+		job9.setMapperClass(CosSimilarityNumerMapper.class);
+		job9.setCombinerClass(CosSimilarityNumerReducer.class);
+		job9.setReducerClass(CosSimilarityNumerReducer.class);
 		
 		job9.setOutputKeyClass(Text.class);
 		job9.setOutputValueClass(Text.class);
 		
-		MultipleInputs.addInputPath(job9, new Path("data/aavs/"), TextInputFormat.class);
-		MultipleInputs.addInputPath(job9, new Path("mystery_data/adjusted_aav/"), TextInputFormat.class); 
-		FileOutputFormat.setOutputPath(job9, new Path("mystery_data/cos_sims/"));
+		FileInputFormat.setInputPaths(job9, new Path("data/aavs/"));
+		FileOutputFormat.setOutputPath(job9, new Path("mystery_data/cos_sim_numerators/"));
 		
 		job9.waitForCompletion(true);
+
+		
+		//	 Compute cosine similarity denominators (roots of squared sums)
+
+		Job job10=Job.getInstance(conf);
+		job10.setJarByClass(MainClass.class);
+		
+		job10.setMapperClass(CosSimilarityDenomMapper.class);
+		job10.setCombinerClass(CosSimilarityDenomCombiner.class);
+		job10.setReducerClass(CosSimilarityDenomReducer.class);
+		
+		job10.setOutputKeyClass(Text.class);
+		job10.setOutputValueClass(Text.class);
+		
+		MultipleInputs.addInputPath(job10, new Path("data/aavs/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job10, new Path("mystery_data/adjusted_aav/"), TextInputFormat.class); 
+		FileOutputFormat.setOutputPath(job10, new Path("mystery_data/cos_sim_denominators/"));
+		
+		job10.waitForCompletion(true);
 		
 		
 	}
