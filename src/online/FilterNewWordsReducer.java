@@ -15,26 +15,25 @@ public class FilterNewWordsReducer  extends Reducer<Text,Text,Text,Text>{
 		
 		for (Text val: values) {
 			String[] line_split = val.toString().split("\t");
-			if (line_split[0].substring(0, 4).equals("idf_")){
-				knowns.add(line_split[0].substring(4));
+			if (key.toString().substring(0, 4).equals("idf_")){
+				knowns.add(key.toString().substring(4));
+				context.write(new Text("KEY: " + key), new Text("VAL (known): " + val));
 			}
 			else {
-				mystery.add(line_split[0] + "\t" + line_split[1]);
+				mystery.add(key.toString() + "\t" + line_split[0]);
+				context.write(new Text("KEY: " + key), new Text("VAL (mystery): " + val));
 			}
 		}
 		
 		for (String entry: mystery){
-			String term = entry.split("\t")[0];
-			String tfidf = entry.split("\t")[1];
-			boolean found = false;
+			String author = entry.split("\t")[0];
+			String term = entry.split("\t")[1];
+			String tfidf = entry.split("\t")[2];
 			for (String known: knowns){
-				if (known.equals(term)){
-					found = true;
+				if (term.equals(known)){
+					context.write(new Text(author + "\t" + term), new Text(tfidf));
 					break;
 				}
-			}
-			if (found){
-				context.write(new Text(term), new Text(tfidf));
 			}
 		}
 	}

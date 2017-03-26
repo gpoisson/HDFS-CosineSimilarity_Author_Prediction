@@ -18,7 +18,9 @@ import offline.AuthorNamesReducer;
 import offline.AuthorWordUseCountMapper;
 import offline.AuthorWordUseCountReducer;
 import offline.CalculateAAVMapper;
+//import offline.CalculateAAVReducer;
 import offline.CalculateIDFMapper;
+import offline.CalculateIDFReducer;
 import offline.CalculateTFMapper;
 import offline.CalculateTFReducer;
 import offline.WordCountMapper;
@@ -38,7 +40,7 @@ public class MainClass {
 		Configuration conf = new Configuration();
 		
 		//	Individual word/author count 
-
+		
 		Job job1=Job.getInstance(conf);
 		job1.setJarByClass(MainClass.class);
 		

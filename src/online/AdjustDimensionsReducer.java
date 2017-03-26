@@ -15,28 +15,34 @@ public class AdjustDimensionsReducer  extends Reducer<Text,Text,Text,Text>{
 		
 		for (Text val: values) {
 			String[] line_split = val.toString().split("\t");
-			if (line_split[0].substring(0, 4).equals("idf_")){
-				knowns.add(line_split[0].substring(4) + "\t" + line_split[1]);
+			if (key.toString().substring(0, 4).equals("idf_")){
+				knowns.add(key.toString().substring(4));
+				context.write(new Text("KEY: " + key), new Text("VAL (known): " + val));
 			}
 			else {
-				mystery.add(line_split[0] + "\t" + line_split[1]);
+				mystery.add(key.toString() + "\t" + line_split[0]);
+				context.write(new Text("KEY: " + key), new Text("VAL (mystery): " + val));
 			}
 		}
 		
 		for (String known: knowns){
-			String term = known.split("\t")[0];
+			String author = null;
+			String term = null;
+			String tfidf = null;
 			boolean found = false;
 			for (String entry: mystery){
-				String[] entry_split = entry.split("\t");
-				if (term.equals(entry_split[0])){
+				author = entry.split("\t")[0];
+				term = entry.split("\t")[1];
+				tfidf = entry.split("\t")[2];
+				if (term.equals(known)){
 					found = true;
-					context.write(new Text(entry_split[0]), new Text(entry_split[1]));
+					//context.write(new Text(author + "\t" + term), new Text(tfidf));
 					break;
 				}
 			}
 			if (!found){
-				float tfidf = (float) (Float.parseFloat(known.split("\t")[1]) * 0.5);
-				context.write(new Text("mys_" + known), new Text(tfidf + ""));
+				
+				//context.write(new Text(author + "\t" + term), new Text(tfidf));
 			}
 		}
 	}

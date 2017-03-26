@@ -13,7 +13,12 @@ public class AdjustDimensionsMapper  extends Mapper<LongWritable, Text, Text, Te
 			
 			String[] line_split = line.split("\t");
 			
-			context.write(new Text(line_split[0]), new Text(line_split[1]));
+			if (line_split.length == 2){
+				context.write(new Text(line_split[0]), new Text(line_split[1]));
+			}
+			if (line_split.length == 3){
+				context.write(new Text(line_split[0] + "\t" + line_split[1]), new Text(line_split[2]));
+			}
 			
 		}
 	}
