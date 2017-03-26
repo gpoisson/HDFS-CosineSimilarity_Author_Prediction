@@ -3,15 +3,14 @@ package offline;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
+// Compute Term Frequency
 public class CalculateTFReducer extends Reducer<Text,Text,Text,Text> {
 
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
 		
-		// Keys: authors		Values: (<word>  <count>)
 		int max_occurrances = -1;
 		ArrayList<String> terms = new ArrayList<String>();
 		ArrayList<Integer> counts = new ArrayList<Integer>();

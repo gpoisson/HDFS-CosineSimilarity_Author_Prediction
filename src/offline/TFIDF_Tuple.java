@@ -5,6 +5,7 @@
 
 package offline;
 
+// Data structure for storing multiple pieces of term-related information
 public class TFIDF_Tuple {
 	
 	public float tf_value;

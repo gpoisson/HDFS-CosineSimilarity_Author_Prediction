@@ -7,6 +7,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+// Compute Author Attribute Vector
 public class CalculateAAVMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 	public void map(LongWritable   key,   Text   value,   Context   context) throws IOException, InterruptedException{

@@ -1,23 +1,22 @@
 package online;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import offline.TFIDF_Tuple;
-
+//Calculate cosine similarity
 public class CosSimilarityMapper  extends Mapper<LongWritable, Text, Text, Text>{
 	
 	public void map(LongWritable   key,   Text   value,   Context   context) throws IOException, InterruptedException{
 		String[] lines = value.toString().split("\n");
-		ArrayList<TFIDF_Tuple> knowns = new ArrayList<TFIDF_Tuple>();
-		ArrayList<TFIDF_Tuple> mystery = new ArrayList<TFIDF_Tuple>();
+
 		for (String line: lines) {
 			String[] line_split = line.split("\t");
-			
+			String term = line_split[1];
+			String author = line_split[0];
+			String tfidf = line_split[2];
+			context.write(new Text(author), new Text(tfidf + "\t" + term));
 		}
 	}
 }

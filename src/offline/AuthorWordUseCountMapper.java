@@ -7,6 +7,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+// Count the number of authors who use a specific word
 public class AuthorWordUseCountMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 	public void map(LongWritable   key,   Text   value,   Context   context) throws IOException, InterruptedException{

@@ -6,6 +6,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+// Count the number of occurrences of a given word
 public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 	
 	public void map(LongWritable   key,   Text   value,   Context   context) throws IOException, InterruptedException{
@@ -23,13 +24,12 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, Text>{
 				if (line_split[line_split.length-1].charAt(i) >= 'a' && line_split[line_split.length-1].charAt(i) <= 'z') {
 					cleaned_text += line_split[line_split.length-1].charAt(i);
 				}
-				else if ((line_split[line_split.length-1].charAt(i) == ' ') || (line_split[line_split.length-1].charAt(i) == '\t') || (line_split[line_split.length-1].charAt(i) == '\n')) {
-					if (cleaned_text.length() > 0) {
+				else if (cleaned_text.length() > 0) {
 						words.add(cleaned_text);
 						cleaned_text = new String();
 					}
 				}
-			}
+			
 			
 			for (String word: words){
 				String out = word + "\t" + author;
