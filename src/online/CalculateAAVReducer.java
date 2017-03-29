@@ -35,8 +35,8 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		}
 		
 		String[] author_names = author_line.split("\n");
-		for (String name: author_names){
-			name = name.split("\t")[0];
+		for (int a = 0; a < author_names.length; a++){
+			author_names[a] = author_names[a].split("\t")[0];
 		}
 		
 		ArrayList<TFIDF_Tuple> tfs = new ArrayList<TFIDF_Tuple>();
@@ -55,15 +55,16 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 			else if (split.length == 2) {
 				TFIDF_Tuple tf = new TFIDF_Tuple();
 				tf.word = key.toString();
-				tf.author = split[1];
+				tf.author = split[0];
 				tf.tf_value = Float.parseFloat(split[1]);
 				tfs.add(tf);
 			}
 		}
 		
-
-		//context.write(new Text(author_names[0]), new Text("idfs: " + idfs.size() + "  tfs: " + tfs.size()));
+		// Write all entries just as they are to context. Some authors will not have a given word, others will. Chain this
+		// job to another job whose input is <author> <term		tfidf> and fill in the blanks there.
 		
+		/*
 		for (TFIDF_Tuple idf: idfs){
 			boolean found[] = new boolean[author_names.length];
 			for (boolean f: found){
@@ -88,6 +89,6 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 				}
 			}
 		}
-		
+		*/
 	}
 }

@@ -19,8 +19,8 @@ import offline.AuthorWordUseCountMapper;
 import offline.AuthorWordUseCountReducer;
 import offline.CalculateAAVMapper;
 //import offline.CalculateAAVReducer;
-import offline.CalculateIDFMapper;
-import offline.CalculateIDFReducer;
+//import offline.CalculateIDFMapper;
+//import offline.CalculateIDFReducer;
 import offline.CalculateTFMapper;
 import offline.CalculateTFReducer;
 import offline.WordCountMapper;
@@ -136,6 +136,7 @@ public class MainClass {
 		job4.waitForCompletion(true);
 		
 		// 	Calculate IDF
+		/*
 		
 		Job job5=Job.getInstance(conf);
 		job5.setJarByClass(MainClass.class);
@@ -150,6 +151,7 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job5, new Path("mystery_data/idf/"));
 		
 		job5.waitForCompletion(true);
+		*/
 		
 		// 	Calculate AAVs
 		
@@ -165,7 +167,7 @@ public class MainClass {
 		job6.setInputFormatClass(TextInputFormat.class);
 		job6.setOutputFormatClass(TextOutputFormat.class);
 		
-		MultipleInputs.addInputPath(job6, new Path("mystery_data/idf/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job6, new Path("data/idf/"), TextInputFormat.class);
 		MultipleInputs.addInputPath(job6, new Path("mystery_data/tf/"), TextInputFormat.class);
 		FileOutputFormat.setOutputPath(job6, new Path("mystery_data/aav/"));
 		

@@ -33,8 +33,8 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		}
 		
 		String[] author_names = author_line.split("\n");
-		for (String name: author_names){
-			name = name.split("\t")[0];
+		for (int a = 0; a < author_names.length; a++){
+			author_names[a] = author_names[a].split("\t")[0];
 		}
 		
 		ArrayList<TFIDF_Tuple> tfs = new ArrayList<TFIDF_Tuple>();
@@ -53,7 +53,7 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 			else if (split.length == 2) {
 				TFIDF_Tuple tf = new TFIDF_Tuple();
 				tf.word = key.toString();
-				tf.author = split[1];
+				tf.author = split[0];
 				tf.tf_value = Float.parseFloat(split[1]);
 				tfs.add(tf);
 			}
@@ -83,6 +83,5 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 				}
 			}
 		}
-		
 	}
 }

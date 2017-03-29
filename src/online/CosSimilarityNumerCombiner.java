@@ -46,8 +46,8 @@ public class CosSimilarityNumerCombiner extends Reducer<Text,Text,Text,Text>{
 		float sum = (float) 0.0;
 		for (Text val: values){
 			String[] split = val.toString().split("\t");
-			float tfidf = Float.parseFloat(split[0]);
-			String term = split[1];
+			float tfidf = Float.parseFloat(split[2]);
+			String term = split[0];
 			
 			for (TFIDF_Tuple entry: mystery){
 				if (entry.word.equals(term)){
