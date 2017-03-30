@@ -8,8 +8,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Reducer.Context;
-
 import offline.TFIDF_Tuple;
 
 public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
@@ -62,7 +60,14 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		}
 		
 		// Write all entries just as they are to context. Some authors will not have a given word, others will. Chain this
-		// job to another job whose input is <author> <term		tfidf> and fill in the blanks there.
+		// job to another job whose input is <term> <author		tfidf> and fill in the blanks there.
+		
+		for (TFIDF_Tuple idf: idfs){
+			for (TFIDF_Tuple tf: tfs){
+				float tfidf = idf.idf * tf.tf_value;
+				context.write(new Text(tf.word), new Text(tf.author + "\t" + tfidf));
+			}
+		}
 		
 		/*
 		for (TFIDF_Tuple idf: idfs){

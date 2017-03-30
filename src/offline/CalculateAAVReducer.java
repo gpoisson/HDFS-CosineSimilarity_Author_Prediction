@@ -8,7 +8,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Reducer.Context;
+import offline.TFIDF_Tuple;
 
 public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 
@@ -17,6 +17,7 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		// Load author names list
 		// Determine whether an author used a word
 		
+		/*
 		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
 		Path path = new Path("data/author_names/part-r-00000");
 		FSDataInputStream in = fileSystem.open(path);
@@ -39,7 +40,7 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		
 		ArrayList<TFIDF_Tuple> tfs = new ArrayList<TFIDF_Tuple>();
 		ArrayList<TFIDF_Tuple> idfs = new ArrayList<TFIDF_Tuple>();
-		
+		*/
 		for (Text val: values) {
 			String[] split = val.toString().split("\t");
 			// IDF
@@ -47,7 +48,8 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 				TFIDF_Tuple idf = new TFIDF_Tuple();
 				idf.word = key.toString();
 				idf.idf = Float.parseFloat(split[0]);
-				idfs.add(idf);
+				//idfs.add(idf);
+				context.write(new Text(idf.word), new Text(idf.idf + "\tidf"));
 			}
 			// TF
 			else if (split.length == 2) {
@@ -55,7 +57,19 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 				tf.word = key.toString();
 				tf.author = split[0];
 				tf.tf_value = Float.parseFloat(split[1]);
-				tfs.add(tf);
+				//tfs.add(tf);
+				context.write(new Text(tf.word), new Text(tf.author + "\t" + tf.tf_value));
+			}
+		}
+		
+		// Write all entries just as they are to context. Some authors will not have a given word, others will. Chain this
+		// job to another job whose input is <term> <author/idf		tf/"idf"> and fill in the blanks there.
+
+		/*
+		for (TFIDF_Tuple idf: idfs){
+			for (TFIDF_Tuple tf: tfs){
+				float tfidf = idf.idf * tf.tf_value;
+				context.write(new Text(tf.word), new Text(tf.author + "\t" + tfidf));
 			}
 		}
 		
@@ -83,5 +97,6 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 				}
 			}
 		}
+		*/
 	}
 }
