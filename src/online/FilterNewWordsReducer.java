@@ -21,7 +21,7 @@ public class FilterNewWordsReducer  extends Reducer<Text,Text,Text,Text>{
 			String term = key.toString();
 			String value = line_split[0];
 			String author = line_split[1];
-			
+			context.write(key, val);
 			if (author.equals("idf_")){
 				knowns.add(term + "\t" + value + "\t" + author);
 			}

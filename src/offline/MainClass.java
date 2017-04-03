@@ -2,6 +2,7 @@ package offline;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -122,7 +123,7 @@ public class MainClass {
 		job4.waitForCompletion(true);
 		
 		// 	Calculate IDF
-		
+				
 		Job job5=Job.getInstance(conf);
 		job5.setJarByClass(MainClass.class);
 		
@@ -153,30 +154,8 @@ public class MainClass {
 		
 		MultipleInputs.addInputPath(job6, new Path("data/idf/"), TextInputFormat.class);
 		MultipleInputs.addInputPath(job6, new Path("data/tf/"), TextInputFormat.class);
-		FileOutputFormat.setOutputPath(job6, new Path("data/raw_aavs/"));
+		FileOutputFormat.setOutputPath(job6, new Path(args[1]));
 		
 		job6.waitForCompletion(true);
-		
-		//	 Equalize AAV dimensions
-
-		Job job7=Job.getInstance(conf);
-		job7.setJarByClass(MainClass.class);
-		
-		job7.setMapperClass(EqualizeAAVMapper.class);
-		job7.setReducerClass(EqualizeAAVReducer.class);
-		
-		job7.setOutputKeyClass(Text.class);
-		job7.setOutputValueClass(Text.class);
-		
-		job7.setInputFormatClass(TextInputFormat.class);
-		job7.setOutputFormatClass(TextOutputFormat.class);
-
-		//MultipleInputs.addInputPath(job6, new Path("data/author_names/"), TextInputFormat.class);
-		//MultipleInputs.addInputPath(job6, new Path("data/raw_aavs/"), TextInputFormat.class);
-		FileInputFormat.setInputPaths(job7, new Path("data/raw_aavs/"));	
-		FileOutputFormat.setOutputPath(job7, new Path(args[1]));
-		
-		job7.waitForCompletion(true);
-
 	}
 }

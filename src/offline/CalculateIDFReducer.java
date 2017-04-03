@@ -9,9 +9,10 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 //Compute Inverted Document Frequency
 public class CalculateIDFReducer extends Reducer<Text,Text,Text,Text> {
-
-	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
-		
+	
+	float author_count = (float) 0.0;
+	
+	protected void setup(Context context) throws IOException, InterruptedException {
 		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
 		Path path = new Path("data/author_count/part-r-00000");
 		FSDataInputStream in = fileSystem.open(path);
@@ -29,8 +30,10 @@ public class CalculateIDFReducer extends Reducer<Text,Text,Text,Text> {
 		
 		String[] line_split = author_line.split("\t");
 		
-		float author_count = Float.parseFloat(line_split[1]);
-		
+		author_count = Float.parseFloat(line_split[1]);
+    }
+
+	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
 		for (Text val: values) {
 			float idf = (float) Math.log(author_count / Float.parseFloat(val.toString()));
 			context.write(new Text("idf_" + key.toString()), new Text(idf + ""));

@@ -19,8 +19,8 @@ import offline.AuthorWordUseCountMapper;
 import offline.AuthorWordUseCountReducer;
 import offline.CalculateAAVMapper;
 //import offline.CalculateAAVReducer;
-//import offline.CalculateIDFMapper;
-//import offline.CalculateIDFReducer;
+import offline.CalculateIDFMapper;
+import offline.CalculateIDFReducer;
 import offline.CalculateTFMapper;
 import offline.CalculateTFReducer;
 import offline.WordCountMapper;
@@ -137,7 +137,6 @@ public class MainClass {
 		
 		// 	Calculate IDF
 		/*
-		
 		Job job5=Job.getInstance(conf);
 		job5.setJarByClass(MainClass.class);
 		
@@ -148,11 +147,10 @@ public class MainClass {
 		job5.setOutputValueClass(Text.class);
 		
 		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));		
-		FileOutputFormat.setOutputPath(job5, new Path("mystery_data/idf/"));
+		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));
 		
 		job5.waitForCompletion(true);
 		*/
-		
 		// 	Calculate AAVs
 		
 		Job job6=Job.getInstance(conf);
@@ -174,7 +172,7 @@ public class MainClass {
 		job6.waitForCompletion(true);
 		
 		// 	Discard new words
-		
+		/*
 		Job job7=Job.getInstance(conf);
 		job7.setJarByClass(MainClass.class);
 		
@@ -206,8 +204,8 @@ public class MainClass {
 		FileOutputFormat.setOutputPath(job8, new Path("mystery_data/adjusted_aav/"));
 		
 		job8.waitForCompletion(true);
-
-		//	 Compute cosine similarity numerators (sums of the products)
+		*/
+		//	 Compute cosine similarity numerators (products only)
 
 		Job job9=Job.getInstance(conf);
 		job9.setJarByClass(MainClass.class);
@@ -219,28 +217,45 @@ public class MainClass {
 		job9.setOutputKeyClass(Text.class);
 		job9.setOutputValueClass(Text.class);
 		
-		FileInputFormat.setInputPaths(job9, new Path("data/aavs/"));
-		FileOutputFormat.setOutputPath(job9, new Path("mystery_data/cos_sim_numerators/"));
+		MultipleInputs.addInputPath(job9, new Path("data/aavs/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job9, new Path("mystery_data/aav/"), TextInputFormat.class); 
+		FileOutputFormat.setOutputPath(job9, new Path("mystery_data/cos_sim_numerator_components/"));
 		
 		job9.waitForCompletion(true);
-
 		
-		//	 Compute cosine similarity denominators (roots of squared sums)
+		//	 Compute cosine similarity numerators (sum of products)
 
 		Job job10=Job.getInstance(conf);
 		job10.setJarByClass(MainClass.class);
 		
-		job10.setMapperClass(CosSimilarityDenomMapper.class);
-		job10.setCombinerClass(CosSimilarityDenomCombiner.class);
-		job10.setReducerClass(CosSimilarityDenomReducer.class);
+		job10.setMapperClass(CosSimilarityNumerSumMapper.class);
+		job10.setReducerClass(CosSimilarityNumerSumReducer.class);
 		
 		job10.setOutputKeyClass(Text.class);
 		job10.setOutputValueClass(Text.class);
-		
-		MultipleInputs.addInputPath(job10, new Path("data/aavs/"), TextInputFormat.class);
-		MultipleInputs.addInputPath(job10, new Path("mystery_data/adjusted_aav/"), TextInputFormat.class); 
-		FileOutputFormat.setOutputPath(job10, new Path("mystery_data/cos_sim_denominators/"));
+
+		FileInputFormat.setInputPaths(job10, new Path("mystery_data/cos_sim_numerator_components/"));
+		FileOutputFormat.setOutputPath(job10, new Path("mystery_data/cos_sim_numerator_sums/"));
 		
 		job10.waitForCompletion(true);
+
+		
+		//	 Compute cosine similarity denominators (roots of squared sums)
+
+		Job job11=Job.getInstance(conf);
+		job11.setJarByClass(MainClass.class);
+		
+		job11.setMapperClass(CosSimilarityDenomMapper.class);
+		job11.setCombinerClass(CosSimilarityDenomCombiner.class);
+		job11.setReducerClass(CosSimilarityDenomReducer.class);
+		
+		job11.setOutputKeyClass(Text.class);
+		job11.setOutputValueClass(Text.class);
+		
+		MultipleInputs.addInputPath(job11, new Path("data/aavs/"), TextInputFormat.class);
+		MultipleInputs.addInputPath(job11, new Path("mystery_data/aav/"), TextInputFormat.class); 
+		FileOutputFormat.setOutputPath(job11, new Path("mystery_data/cos_sim_denominators/"));
+		
+		job11.waitForCompletion(true);
 	}
 }

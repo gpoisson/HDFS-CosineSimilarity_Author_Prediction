@@ -19,7 +19,7 @@ public class TFIDF_Tuple {
 	}
 	
 	public String toString() {
-		return word + "," + author + "," + tf_value + "," + idf;
+		return word + " " + author + ",  TF: " + tf_value + ",  IDF: " + idf + "  TFIDF: " + tfidf_value;
 	}
 
 }

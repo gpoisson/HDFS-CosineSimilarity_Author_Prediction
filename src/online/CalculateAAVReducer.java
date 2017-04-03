@@ -8,15 +8,16 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Reducer.Context;
+
 import offline.TFIDF_Tuple;
 
+//Compute Author Attribute Vector
 public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 
-	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
-		
-		// Load author names list
-		// Determine whether an author used a word
-		
+	String[] author_names;
+	
+	protected void setup(Context context) throws IOException, InterruptedException {
 		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
 		Path path = new Path("mystery_data/author_names/part-r-00000");
 		FSDataInputStream in = fileSystem.open(path);
@@ -33,67 +34,62 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		}
 		
 		String[] author_names = author_line.split("\n");
-		for (int a = 0; a < author_names.length; a++){
-			author_names[a] = author_names[a].split("\t")[0];
-		}
 		
-		ArrayList<TFIDF_Tuple> tfs = new ArrayList<TFIDF_Tuple>();
+		for (String name: author_names){
+			name = name.split("\t")[0];
+		}
+		this.author_names = author_names;
+	}
+	
+	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
+		
 		ArrayList<TFIDF_Tuple> idfs = new ArrayList<TFIDF_Tuple>();
+		ArrayList<TFIDF_Tuple> tfs = new ArrayList<TFIDF_Tuple>();
 		
 		for (Text val: values) {
-			String[] split = val.toString().split("\t");
-			// IDF
-			if (split.length == 1) {
-				TFIDF_Tuple idf = new TFIDF_Tuple();
-				idf.word = key.toString();
-				idf.idf = Float.parseFloat(split[0]);
-				idfs.add(idf);
+			String[] line_split = val.toString().split("\t");
+			TFIDF_Tuple new_entry = new TFIDF_Tuple();
+			new_entry.word = key.toString();
+			if (line_split[0].equals("idf")){
+				new_entry.idf = Float.parseFloat(line_split[1]);
+				idfs.add(new_entry);
 			}
-			// TF
-			else if (split.length == 2) {
-				TFIDF_Tuple tf = new TFIDF_Tuple();
-				tf.word = key.toString();
-				tf.author = split[0];
-				tf.tf_value = Float.parseFloat(split[1]);
-				tfs.add(tf);
+			else if (line_split[0].equals("tf")) {
+				new_entry.author = line_split[1];
+				new_entry.tf_value = Float.parseFloat(line_split[2]);
+				tfs.add(new_entry);
 			}
 		}
-		
-		// Write all entries just as they are to context. Some authors will not have a given word, others will. Chain this
-		// job to another job whose input is <term> <author		tfidf> and fill in the blanks there.
-		
-		for (TFIDF_Tuple idf: idfs){
-			for (TFIDF_Tuple tf: tfs){
-				float tfidf = idf.idf * tf.tf_value;
-				context.write(new Text(tf.word), new Text(tf.author + "\t" + tfidf));
-			}
-		}
-		
-		/*
-		for (TFIDF_Tuple idf: idfs){
-			boolean found[] = new boolean[author_names.length];
-			for (boolean f: found){
-				f = false;
-			}
-			for (TFIDF_Tuple tf: tfs) {
-				if (idf.word.equals(tf.word)){
-					float tfidf = tf.tf_value * idf.idf;
-					tf.tfidf_value = tfidf;
-					for (int i = 0; i < author_names.length; i++){
-						if (author_names[i].equals(tf.author)){
-							found[i] = true;
-						}
+	
+		for (TFIDF_Tuple idf: idfs) {
+			for (String author: author_names) {
+				String name = author.split("\t")[0];
+				boolean found = false;
+				for (TFIDF_Tuple tf: tfs) {
+					if (tf.author.equals(name) && tf.word.equals(idf.word)){
+						found = true;
+						break;
 					}
+				}
+				if (!found) {
+					TFIDF_Tuple new_entry = new TFIDF_Tuple();
+					new_entry.word = idf.word;
+					new_entry.author = name;
+					new_entry.tf_value = (float) (0.5);
+					tfs.add(new_entry);					
+				}
+			}
+		}
+		
+		for (TFIDF_Tuple idf: idfs) {
+			for (TFIDF_Tuple tf: tfs) {
+				if (idf.word.equals(tf.word)) {
+					float tfidf = idf.idf * tf.tf_value;
+					tf.tfidf_value = tfidf;
 					context.write(new Text(tf.author), new Text(tf.word + "\t" + tf.tfidf_value));
 				}
 			}
-			for (int i = 0; i < author_names.length; i++){
-				if (found[i] == false){
-					float tfidf = (float) Math.log(author_names.length);
-					context.write(new Text(author_names[i]), new Text(idf.word + "\t" + tfidf));
-				}
-			}
 		}
-		*/
 	}
+
 }
