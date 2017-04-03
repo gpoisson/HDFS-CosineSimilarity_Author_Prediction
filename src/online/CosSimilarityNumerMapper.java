@@ -14,7 +14,7 @@ public class CosSimilarityNumerMapper extends Mapper<LongWritable, Text, Text, T
 			String[] line_split = line.split("\t");
 			String author = line_split[0];
 			String term = line_split[1];
-			float tfidf = Float.parseFloat(line_split[2]);
+			double tfidf = Double.parseDouble(line_split[2]);
 			context.write(new Text(term), new Text(author + "\t" + tfidf));
 		}
 	}

@@ -135,22 +135,6 @@ public class MainClass {
 				
 		job4.waitForCompletion(true);
 		
-		// 	Calculate IDF
-		/*
-		Job job5=Job.getInstance(conf);
-		job5.setJarByClass(MainClass.class);
-		
-		job5.setMapperClass(CalculateIDFMapper.class);
-		job5.setReducerClass(CalculateIDFReducer.class);
-		
-		job5.setOutputKeyClass(Text.class);
-		job5.setOutputValueClass(Text.class);
-		
-		FileInputFormat.setInputPaths(job5, new Path("data/author_word_use_count/"));		
-		FileOutputFormat.setOutputPath(job5, new Path("data/idf/"));
-		
-		job5.waitForCompletion(true);
-		*/
 		// 	Calculate AAVs
 		
 		Job job6=Job.getInstance(conf);
@@ -171,40 +155,6 @@ public class MainClass {
 		
 		job6.waitForCompletion(true);
 		
-		// 	Discard new words
-		/*
-		Job job7=Job.getInstance(conf);
-		job7.setJarByClass(MainClass.class);
-		
-		job7.setMapperClass(FilterNewWordsMapper.class);
-		job7.setReducerClass(FilterNewWordsReducer.class);
-		
-		job7.setOutputKeyClass(Text.class);
-		job7.setOutputValueClass(Text.class);
-		
-		MultipleInputs.addInputPath(job7, new Path("data/idf/"), TextInputFormat.class);
-		MultipleInputs.addInputPath(job7, new Path("mystery_data/aav/"), TextInputFormat.class);	
-		FileOutputFormat.setOutputPath(job7, new Path("mystery_data/minimized_aav/"));
-		
-		job7.waitForCompletion(true);
-		
-		// 	Add unused words
-		
-		Job job8=Job.getInstance(conf);
-		job8.setJarByClass(MainClass.class);
-		
-		job8.setMapperClass(AdjustDimensionsMapper.class);
-		job8.setReducerClass(AdjustDimensionsReducer.class);
-		
-		job8.setOutputKeyClass(Text.class);
-		job8.setOutputValueClass(Text.class);
-		
-		MultipleInputs.addInputPath(job8, new Path("data/idf/"), TextInputFormat.class);
-		MultipleInputs.addInputPath(job8, new Path("mystery_data/minimized_aav/"), TextInputFormat.class);
-		FileOutputFormat.setOutputPath(job8, new Path("mystery_data/adjusted_aav/"));
-		
-		job8.waitForCompletion(true);
-		*/
 		//	 Compute cosine similarity numerators (products only)
 
 		Job job9=Job.getInstance(conf);

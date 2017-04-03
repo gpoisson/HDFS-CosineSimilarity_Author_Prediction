@@ -51,12 +51,12 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 			TFIDF_Tuple new_entry = new TFIDF_Tuple();
 			new_entry.word = key.toString();
 			if (line_split[0].equals("idf")){
-				new_entry.idf = Float.parseFloat(line_split[1]);
+				new_entry.idf = Double.parseDouble(line_split[1]);
 				idfs.add(new_entry);
 			}
 			else if (line_split[0].equals("tf")) {
 				new_entry.author = line_split[1];
-				new_entry.tf_value = Float.parseFloat(line_split[2]);
+				new_entry.tf_value = Double.parseDouble(line_split[2]);
 				tfs.add(new_entry);
 			}
 		}
@@ -75,7 +75,7 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 					TFIDF_Tuple new_entry = new TFIDF_Tuple();
 					new_entry.word = idf.word;
 					new_entry.author = name;
-					new_entry.tf_value = (float) (0.5);
+					new_entry.tf_value = (double) (0.5);
 					tfs.add(new_entry);					
 				}
 			}
@@ -84,7 +84,7 @@ public class CalculateAAVReducer extends Reducer<Text,Text,Text,Text> {
 		for (TFIDF_Tuple idf: idfs) {
 			for (TFIDF_Tuple tf: tfs) {
 				if (idf.word.equals(tf.word)) {
-					float tfidf = idf.idf * tf.tf_value;
+					double tfidf = idf.idf * tf.tf_value;
 					tf.tfidf_value = tfidf;
 					context.write(new Text(tf.author), new Text(tf.word + "\t" + tf.tfidf_value));
 				}

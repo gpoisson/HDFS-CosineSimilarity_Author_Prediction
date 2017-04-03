@@ -43,8 +43,8 @@ public class AdjustDimensionsReducer  extends Reducer<Text,Text,Text,Text>{
 				}
 			}
 			if (!found){
-				float idf = Float.parseFloat(term_idf_type.split("\t")[1]);
-				float tfidf = (float) (idf * 0.5);
+				double idf = Double.parseDouble(term_idf_type.split("\t")[1]);
+				double tfidf = (double) (idf * 0.5);
 				context.write(new Text("unknown author"), new Text(term + "\t" + tfidf));
 			}
 		}

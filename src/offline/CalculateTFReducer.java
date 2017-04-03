@@ -26,7 +26,7 @@ public class CalculateTFReducer extends Reducer<Text,Text,Text,Text> {
 		
 		for (int i = 0; i < terms.size(); i++) {
 			int count = counts.get(i);
-			float tf = (float) (0.5 + 0.5 * (((float) count) / max_occurrances));
+			double tf = (double) (0.5 + 0.5 * (((double) count) / max_occurrances));
 			context.write(new Text("tf_" + key.toString() + "\t" + terms.get(i)), new Text (tf + ""));
 		}
 	}

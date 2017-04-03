@@ -12,7 +12,7 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 public class CosSimilarityNumerSumReducer extends Reducer<Text,Text,Text,Text>{
 	
 	String[] author_names;
-	float[] sums;
+	double[] sums;
 	
 	protected void setup(Context context) throws IOException, InterruptedException {
 		FileSystem fileSystem = FileSystem.get(context.getConfiguration());
@@ -36,7 +36,7 @@ public class CosSimilarityNumerSumReducer extends Reducer<Text,Text,Text,Text>{
 			author_names[i] = author_names[i].split("\t")[0];
 		}
 		this.author_names = author_names;
-		this.sums = new float[author_names.length];
+		this.sums = new double[author_names.length];
 	}
 	
 	public void reduce(Text  key,  Iterable<Text>  values,  Context  context) throws IOException, InterruptedException {
@@ -45,7 +45,7 @@ public class CosSimilarityNumerSumReducer extends Reducer<Text,Text,Text,Text>{
 			String author = key.toString();
 			String[] split = val.toString().split("\t");
 			String term = split[0];
-			float product = Float.parseFloat(split[1]);
+			double product = Double.parseDouble(split[1]);
 			for (int i = 0; i < author_names.length; i++){
 				if (author.equals(author_names[i])){
 					sums[i] += product;

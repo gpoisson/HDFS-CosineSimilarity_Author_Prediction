@@ -24,7 +24,7 @@ public class CalculateAAVMapper extends Mapper<LongWritable, Text, Text, Text> {
 			
 			if (line_split[0].substring(0, 4).equals("idf_")){
 				word = line_split[0].substring(4);
-				float idf = Float.parseFloat(line_split[1]);
+				double idf = Double.parseDouble(line_split[1]);
 				TFIDF_Tuple new_entry = new TFIDF_Tuple();
 				new_entry.word = word;
 				new_entry.idf = idf;
@@ -35,7 +35,7 @@ public class CalculateAAVMapper extends Mapper<LongWritable, Text, Text, Text> {
 			else if (line_split[0].substring(0, 3).equals("tf_")){
 				author = line_split[0].substring(3);
 				word = line_split[1];
-				float tf = Float.parseFloat(line_split[2]);
+				double tf = Double.parseDouble(line_split[2]);
 				TFIDF_Tuple new_entry = new TFIDF_Tuple();
 				new_entry.word = word;
 				new_entry.author = author;
